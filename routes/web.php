@@ -70,3 +70,9 @@ Route::get('/index', function(){
     ];
     return view('posts.index', compact('posts'));
 });
+
+Route::middleware(['auth', 'role:kasir'])->group(function () {
+    Route::get('/pos/history', function () {
+        return 'Halaman Riwayat Transaksi Saya';
+    })->name('pos.history');
+});
