@@ -5,6 +5,14 @@
  
     <div class="py-8"
          x-data="posCart({{ $products->toJson() }})">
+         {{-- Pesan galat --}}
+        @if (session('error') || $errors->any())
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-4">
+                <div class="p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                    {{ session('error') ?? $errors->first() }}
+                </div>
+            </div>
+        @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-3 gap-6">
  
             <!-- Kolom kiri: pencarian & daftar produk -->

@@ -1,35 +1,65 @@
 <x-app-layout>
     <x-slot name="header"><h2 class="font-semibold text-xl">Struk Transaksi</h2></x-slot>
+
+    <style>
+        @media print {
+            @page { margin: 8mm; }
+
+            /* sembunyikan semuanya: navigasi, header, tombol */
+            body * { visibility: hidden; }
+
+            /* tampilkan hanya area struk */
+            #struk-area, #struk-area * { visibility: visible; }
+            #struk-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+
+            .no-print { display: none !important; }
+        }
+    </style>
+
     <div class="py-8">
         <div class="max-w-md mx-auto sm:px-6">
-            <x-card>
-                <p class="text-center font-semibold">POS Barokah Mart</p>
-                <p class="text-center text-xs text-gray-500 mb-3">{{ $transaction->invoice_number }}</p>
-                <p class="text-xs text-gray-500 mb-3">
-                    {{ $transaction->created_at->format('d M Y H:i') }} &middot; Kasir: {{ $transaction->user->name }}
-                </p>
-                <hr class="mb-3">
-                @foreach ($transaction->details as $detail)
-                    <div class="flex justify-between text-sm mb-1">
-                        <span>{{ $detail->product->name }} x{{ $detail->qty }}</span>
-                        <span>Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</span>
+            <div id="struk-area">
+                <x-card>
+                    <p class="text-center font-semibold">POS Barokah Mart</p>
+                    <p class="text-center text-xs text-gray-500 mb-3">{{ $transaction->invoice_number }}</p>
+                    <p class="text-xs text-gray-500 mb-3">
+                        {{ $transaction->created_at->format('d M Y H:i') }} &middot; Kasir: {{ $transaction->user->name }}
+                    </p>
+                    <hr class="mb-3">
+                    @foreach ($transaction->details as $detail)
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>{{ $detail->product->name }} x{{ $detail->qty }}</span>
+                            <span>Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</span>
+                        </div>
+                    @endforeach
+                    <hr class="my-3">
+                    <div class="flex justify-between font-semibold">
+                        <span>Total</span><span>Rp{{ number_format($transaction->total, 0, ',', '.') }}</span>
                     </div>
-                @endforeach
-                <hr class="my-3">
-                <div class="flex justify-between font-semibold">
-                    <span>Total</span><span>Rp{{ number_format($transaction->total, 0, ',', '.') }}</span>
-                </div>
-                <div class="flex justify-between text-sm">
-                    <span>Bayar</span><span>Rp{{ number_format($transaction->pay, 0, ',', '.') }}</span>
-                </div>
-                <div class="flex justify-between text-sm">
-                    <span>Kembali</span><span>Rp{{ number_format($transaction->change, 0, ',', '.') }}</span>
-                </div>
-                <a href="{{ route('pos.index') }}" class="block text-center mt-4 bg-indigo-600 text-white py-2 rounded-md">
+                    <div class="flex justify-between text-sm">
+                        <span>Bayar</span><span>Rp{{ number_format($transaction->pay, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span>Kembali</span><span>Rp{{ number_format($transaction->change, 0, ',', '.') }}</span>
+                    </div>
+                </x-card>
+            </div>
+
+            <div class="no-print mt-4 space-y-2">
+                <button type="button" onclick="window.print()"
+                    class="w-full bg-gray-700 text-white py-2 rounded-md">
+                    Cetak Struk
+                </button>
+                <a href="{{ route('pos.index') }}"
+                    class="block text-center bg-indigo-600 text-white py-2 rounded-md">
                     Transaksi Baru
                 </a>
-            </x-card>
+            </div>
         </div>
     </div>
 </x-app-layout>
-

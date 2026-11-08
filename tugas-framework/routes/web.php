@@ -83,3 +83,7 @@ Route::middleware(['auth', 'role:kasir'])->group(function () {
 Route::resource('categories', CategoryController::class);
 
 Route::resource('products', ProductController::class);
+
+Route::middleware(['auth', 'role:kasir'])->group(function () {
+    Route::get('/pos/history', [PosController::class, 'history'])->name('pos.history');
+});
