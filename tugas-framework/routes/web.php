@@ -1,12 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PosController;
 
 Route::get('/helluuww', function () {
     return ('welcome');
 });
 
-use App\Http\Controllers\DashboardController;
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
@@ -22,7 +27,6 @@ Route::get('/about', function () {
 });
 
 
-use App\Http\Controllers\Auth\LoginController;
  
 Route::get('/login', [LoginController::class, 'create'])
     ->middleware('guest')
@@ -46,15 +50,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+    Route::get('/pos/{transaction}/struk', [PosController::class, 'struk'])->name('pos.struk');
 });
 
-use App\Http\Controllers\UserController;
 
 Route::middleware(['auth', 'role:admin'])->group(function(){
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
 
-use App\Http\Controllers\CategoryController;
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -76,3 +79,7 @@ Route::middleware(['auth', 'role:kasir'])->group(function () {
         return 'Halaman Riwayat Transaksi Saya';
     })->name('pos.history');
 });
+
+Route::resource('categories', CategoryController::class);
+
+Route::resource('products', ProductController::class);
